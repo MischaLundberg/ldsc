@@ -1,3 +1,4 @@
+
 '''
 (c) 2014 Brendan Bulik-Sullivan and Hilary Finucane
 
@@ -452,6 +453,11 @@ class Hsq(LD_Score_Regression):
 
         out = ['Total ' + T + ' scale h2: ' +
                s(c * self.tot) + ' (' + s(c * self.tot_se) + ')']
+        heritability = (c * self.tot)/(c * self.tot_se)
+        if heritability > 1.96:
+            out.append('Heritability test passed (above 1.96) with ' + s(heritability))
+        else:
+            out.append('Heritability test failed (below 1.96) with ' + s(heritability))
         if self.n_annot > 1:
             if ref_ld_colnames is None:
                 ref_ld_colnames = ['CAT_' + str(i)

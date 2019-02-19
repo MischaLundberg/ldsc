@@ -297,7 +297,7 @@ def cell_type_specific(args, log):
         M_annot = np.hstack([M_cts, M_annot_all_regr])
         hsqhat = reg.Hsq(s(chisq), ref_ld, s(sumstats[w_ld_cname]), s(sumstats.N),
                      M_annot, n_blocks=n_blocks, intercept=args.intercept_h2,
-                     twostep=None, old_weights=True)
+                     twostep=None, old_weights=True, fn_reg=log)
         coef, coef_se = hsqhat.coef[0], hsqhat.coef_se[0]
         results_data.append((name, coef, coef_se, stats.norm.sf(coef/coef_se)))
         if args.print_all_cts:
@@ -356,7 +356,7 @@ def estimate_h2(args, log):
 
     hsqhat = reg.Hsq(chisq, ref_ld, s(sumstats[w_ld_cname]), s(sumstats.N),
                      M_annot, n_blocks=n_blocks, intercept=args.intercept_h2,
-                     twostep=args.two_step, old_weights=old_weights)
+                     twostep=args.two_step, old_weights=old_weights, fn_reg=log)
 
     if args.print_cov:
         _print_cov(hsqhat, args.out + '.cov', log)

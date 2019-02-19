@@ -74,6 +74,7 @@ class Logger(object):
     '''
     def __init__(self, fh):
         self.log_fh = open(fh, 'wb')
+        self._fname_reg = fh
 
     def log(self, msg):
         '''

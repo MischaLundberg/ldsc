@@ -338,11 +338,11 @@ class Hsq(LD_Score_Regression):
 
     __null_intercept__ = 1
 
-    def __init__(self, y, x, w, N, M, n_blocks=200, intercept=None, slow=False, twostep=None, old_weights=False):
+    def __init__(self, y, x, w, N, M, n_blocks=200, intercept=None, slow=False, twostep=None, old_weights=False, fn_reg=None):
         step1_ii = None
         if twostep is not None:
             step1_ii = y < twostep
-
+        self.fn_reg=fn_reg._fname_reg[:-4]
         LD_Score_Regression.__init__(self, y, x, w, N, M, n_blocks, intercept=intercept,
                                      slow=slow, step1_ii=step1_ii, old_weights=old_weights)
         self.mean_chisq, self.lambda_gc = self._summarize_chisq(y)
@@ -444,6 +444,16 @@ class Hsq(LD_Score_Regression):
 
     def summary(self, ref_ld_colnames=None, P=None, K=None, overlap=False):
         '''Print summary of the LD Score Regression.'''
+        #print self.__dict__.keys()
+        #print self.fn_reg.__dict__
+        #print self.fn_reg._fname_reg[:-4]
+        print self.fn_reg
+        h2_result = self.fn_reg+"_h2.res"
+        intercept_result = self.fn_reg+"_intercept.res"
+        print h2_result
+        with open(intercept_result, 'w') as intres:
+            intres.write(s(self.intercept))
+        #rg_result = 
         if P is not None and K is not None:
             T = 'Liability'
             c = h2_obs_to_liab(1, P, K)
@@ -454,6 +464,8 @@ class Hsq(LD_Score_Regression):
         out = ['Total ' + T + ' scale h2: ' +
                s(c * self.tot) + ' (' + s(c * self.tot_se) + ')']
         heritability = (c * self.tot)/(c * self.tot_se)
+        with open(h2_result, 'w') as h2res:
+            h2res.write(s(heritability))
         if heritability > 1.96:
             out.append('Heritability test passed (above 1.96) with ' + s(heritability))
         else:

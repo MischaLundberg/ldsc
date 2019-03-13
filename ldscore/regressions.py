@@ -450,9 +450,9 @@ class Hsq(LD_Score_Regression):
         print self.fn_reg
         h2_result = self.fn_reg+"_h2.res"
         intercept_result = self.fn_reg+"_intercept.res"
-        print h2_result
         with open(intercept_result, 'w') as intres:
-            intres.write(s(self.intercept))
+            intres.write("Intercept\tIntercept_Standard_Error\n")
+            intres.write(s(self.intercept)+"\t"+s(self.intercept_se))
         #rg_result = 
         if P is not None and K is not None:
             T = 'Liability'
@@ -465,7 +465,8 @@ class Hsq(LD_Score_Regression):
                s(c * self.tot) + ' (' + s(c * self.tot_se) + ')']
         heritability = (c * self.tot)/(c * self.tot_se)
         with open(h2_result, 'w') as h2res:
-            h2res.write(s(heritability))
+            h2res.write("Heritability\th2\th2_Standard_Error\n")
+            h2res.write(s(heritability)+"\t"+s(c * self.tot)+"\t"+s(c * self.tot_se))
         if heritability > 1.96:
             out.append('Heritability test passed (above 1.96) with ' + s(heritability))
         else:
